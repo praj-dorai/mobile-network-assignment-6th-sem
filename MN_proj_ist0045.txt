@@ -1,0 +1,159 @@
+#mn project by Prajwal D 20201ist0045 sem 6 6ist-1 (2023)
+
+import tkinter as tk
+import matplotlib.pyplot as plt
+import numpy as np
+import random
+from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
+
+# Create a gradient image with the desired colors
+width, height = 400, 400
+gradient = Image.new('RGB', (width, height), color=(255, 255, 255))
+draw = ImageDraw.Draw(gradient)
+
+# draw the gradient rectangles
+draw.rectangle((0, 0, width, height), fill=(214, 118, 39), outline=None)
+draw.rectangle((0, 0, width, height // 2), fill=(214, 118, 39), outline=None)
+
+# create a font object and draw the heading
+font = ImageFont.truetype("arial.ttf", 22)
+heading = "WELCOME TO BANDWIDTH VIEWER"
+heading_width, heading_height = draw.textsize(heading, font=font)
+x = (width - heading_width) // 2
+y = (height - heading_height) // 2
+draw.text((x, y), heading, fill=(255, 255, 255), font=font)
+
+# Save the gradient image to a file
+gradient.save('gradient.png')
+
+# Define the data
+user_labels = ['User1', 'User2', 'User3', 'User4', 'User5']
+app_labels = ['Gaana', 'Facebook', 'Youtube', 'Whatsapp', 'Teams','Outlook']
+
+# Define colors for the bars
+user_colors = ['blue', '#34c25f', '#33a3bd', 'orange', '#87147c']
+app_colors = ['purple', 'orange', 'blue', 'green', 'red','pink']
+
+# Assign total bandwidth across all users
+total_bandwidth = 500
+user_bandwidths = [random.randint(0, total_bandwidth) for _ in range(len(user_labels))]
+user_bandwidths[random.randint(0, len(user_bandwidths)-1)] = 0  # Set one user to be offline
+
+app_bandwidths = [0.55, 0.15, 0.85, 0.45, 0.295, 0.10]
+
+# Define a function to create the user bandwidth graph
+def create_user_graph():
+   
+    # Create the graph
+    plt.bar(user_labels, user_bandwidths, color=user_colors)
+    plt.title('User Bandwidth Usage')
+    plt.xlabel('User')
+    plt.ylabel('Bandwidth Usage (MB)')
+    plt.show()
+
+    # Print the online/offline status of each user
+    user_bandwidth = dict(zip(user_labels, user_bandwidths))
+    for user, bandwidth in user_bandwidth.items():
+        if bandwidth > 0:
+            print(f"{user} is online with {bandwidth} bandwidth usage")
+        else:
+            print(f"{user} is offline with {bandwidth} bandwidth usage")
+
+    # Increment the bandwidth usage of each online user by a factor of 5 and display the updated bandwidth usage
+    increment_bandwidth()
+
+# Define a function to increment the bandwidth usage of each online user by a factor of 5 and display the updated bandwidth usage
+def increment_bandwidth():
+    for i, bandwidth in enumerate(user_bandwidths):
+        if bandwidth > 0:
+            user_bandwidths[i] += 5 * bandwidth
+            print(f"{user_labels[i]} bandwidth usage after incrementing: {user_bandwidths[i]}")
+
+# Define a function to create the app bandwidth graph
+def create_app_graph():
+    # Create the graph
+    plt.bar(app_labels, app_bandwidths, color=user_colors)
+    plt.title('App Bandwidth Usage')
+    plt.xlabel('App')
+    plt.ylabel('Bandwidth Usage (MB)')
+    plt.show()
+
+# Define a function to create the GUI window
+import tkinter as tk
+from tkinter import messagebox
+import matplotlib.pyplot as plt
+
+# Function to create the pie chart for user bandwidth
+def create_user_pie_chart():
+    # Calculate the total user bandwidth
+    total_user_bandwidth = sum(user_bandwidths)
+
+    # Calculate the percentage of each user's bandwidth
+    user_bandwidth_percentages = [bandwidth / total_user_bandwidth * 100 for bandwidth in user_bandwidths]
+
+    # Create the pie chart
+    plt.pie(user_bandwidth_percentages, labels=user_labels, colors=user_colors, autopct='%1.1f%%', startangle=90)
+    plt.axis('equal')
+    plt.title('User Bandwidth Usage')
+    plt.show()
+
+# Function to create the pie chart for application bandwidth
+def create_app_pie_chart():
+    # Calculate the total app bandwidth
+    total_app_bandwidth = sum(app_bandwidths)
+
+    # Calculate the percentage of each app's bandwidth
+    app_bandwidth_percentages = [bandwidth / total_app_bandwidth * 100 for bandwidth in app_bandwidths]
+
+    # Create the pie chart
+    plt.pie(app_bandwidth_percentages, labels=app_labels, colors=app_colors, autopct='%1.1f%%', startangle=90)
+    plt.axis('equal')
+    plt.title('Application Bandwidth Usage')
+    plt.show()
+
+
+# Function to create the GUI window
+def create_gui():
+    # Create the window
+    root = tk.Tk()
+    root.title('Bandwidth Usage by Prajwal')
+    root.geometry("400x400")
+
+    # Load the gradient image and set it as the background of the window
+    gradient_image = tk.PhotoImage(file='gradient.png')
+    background_label = tk.Label(root, image=gradient_image)
+    background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+    # Set the gradient background color
+    gradient = ['#ff5f6d', '#ffc371']
+    for i in range(400):
+        root.configure(background=gradient[int(i/200)])
+        root.update()
+
+    # Create a button for the user bandwidth graph
+    user_button = tk.Button(root, text='CLICK HERE FOR USER BANDWIDTH', bg='yellow', command=create_user_graph)
+    user_button.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
+
+    # Create a button for the app bandwidth graph
+    app_button = tk.Button(root, text='CLICK HERE FOR APPLICATION BANDWIDTH', bg='light blue', command=create_app_graph)
+    app_button.place(relx=0.5, rely=0.6, anchor=tk.CENTER)
+
+    # Create a button for the user bandwidth pie chart
+    user_pie_button = tk.Button(root, text='VIEW USER BANDWIDTH PIE CHART', bg='orange', command=create_user_pie_chart)
+    user_pie_button.place(relx=0.5, rely=0.8, anchor=tk.CENTER)
+
+    # Create a button for the app bandwidth pie chart
+    app_pie_button = tk.Button(root, text='VIEW APPLICATION BANDWIDTH PIE CHART', bg='light green', command=create_app_pie_chart)
+    app_pie_button.place(relx=0.5, rely=0.9, anchor=tk.CENTER)
+
+    # Run the window
+    root.mainloop()
+
+# Call the function to create the GUI window
+create_gui()
+ 
+
+
+
+
